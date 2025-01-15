@@ -1,24 +1,33 @@
-﻿namespace TrainingApp
+﻿using TrainingApp.Models;
+
+namespace TrainingApp
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
 
         public MainPage()
         {
             InitializeComponent();
+            LoadSessions();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void LoadSessions()
         {
-            count++;
+            SessionsList.ItemsSource = await App.Database.GetTrainingSessionsAsync();
+        }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+        private async void OnSessionSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem is TrainingSession session)
+            {
+                await Navigation.PushAsync(new CreateTrainingSessionPage(session));
+            }
+        }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+        private async void OnCreateNewSession(object sender, EventArgs e)
+        {
+            TrainingSession newSession = new TrainingSession { Date = DateTime.Now };
+            await Navigation.PushAsync(new CreateTrainingSessionPage(newSession));
         }
     }
 

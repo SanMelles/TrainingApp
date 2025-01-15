@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using TrainingApp.Models;
 
 public class WorkoutDatabase
 {
