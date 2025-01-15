@@ -1,15 +1,22 @@
 ﻿using SQLite;
 using TrainingApp.Models;
 
-public class WorkoutDatabase
+namespace TrainingApp.Data;
+
+public class WorkoutDatabase : SQLiteConnection
 {
     private readonly SQLiteAsyncConnection _database;
 
-    public WorkoutDatabase(string dbPath)
+    public WorkoutDatabase(string dbPath) : base(dbPath)
     {
         _database = new SQLiteAsyncConnection(dbPath);
-        _database.CreateTableAsync<TrainingSession>().Wait();
-        _database.CreateTableAsync<TrainingSessionExercise>().Wait();
+        InitializeDatabase().Wait();
+    }
+
+    private async Task InitializeDatabase()
+    {
+        await _database.CreateTableAsync<TrainingSession>();
+        await _database.CreateTableAsync<TrainingSessionExercise>();
     }
 
     public Task<List<TrainingSession>> GetTrainingSessionsAsync()
@@ -17,20 +24,30 @@ public class WorkoutDatabase
 
     public Task<List<TrainingSessionExercise>> GetExercisesAsync(int sessionId)
         => _database.Table<TrainingSessionExercise>()
-                    .Where(e => e.TrainingSessionId == sessionId).ToListAsync();
+                   .Where(e => e.TrainingSessionId == sessionId).ToListAsync();
 
-    public Task<int> SaveTrainingSessionAsync(TrainingSession session)
-        => _database.InsertAsync(session);
+    public async Task<int> SaveTrainingSessionAsync(TrainingSession session)
+    {
+        int result = await _database.InsertOrReplaceAsync(session);
+
+        return result;
+    }
+
+    public async Task<int> DeleteTrainingSessionAsync(TrainingSession session)
+    {
+        await _database.ExecuteAsync("DELETE FROM TrainingSessionExercise WHERE TrainingSessionId = ?", session.Id);
+        return await _database.DeleteAsync(session);
+    }
 
     public Task<int> SaveExerciseAsync(TrainingSessionExercise exercise)
-        => _database.InsertAsync(exercise);
+        => _database.InsertOrReplaceAsync(exercise);
 
-    public Task<int> UpdateTrainingSessionAsync(TrainingSession session)
-        => _database.UpdateAsync(session);
-
-    public Task<int> DeleteTrainingSessionAsync(TrainingSession session)
-        => _database.DeleteAsync(session);
+    public Task<int> UpdateExerciseAsync(TrainingSessionExercise exercise)
+        => _database.UpdateAsync(exercise);
 
     public Task<int> DeleteExerciseAsync(TrainingSessionExercise exercise)
         => _database.DeleteAsync(exercise);
+
+    public Task<int> UpdateTrainingSessionAsync(TrainingSession session)
+        => _database.UpdateAsync(session);
 }

@@ -4,13 +4,17 @@
              x:Class="TrainingApp.CreateTrainingSessionPage"
              Title="Create Training Session">
     <StackLayout Padding="20">
-        <Entry x:Name="NameEntry" Placeholder="Session Name" />
+        <Label Text="Session Name" />
+        <Entry x:Name="SessionNameEntry" Placeholder="Enter Session Name" />
+        <Label Text="Date" />
         <DatePicker x:Name="DatePicker" />
-        <CollectionView x:Name="ExercisesList">
+        <Label Text="Exercises" />
+        <CollectionView x:Name="ExercisesList" ItemsSource="{Binding Exercises}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout>
+                    <StackLayout Orientation="Horizontal">
                         <Label Text="{Binding ExerciseName}" />
+                        <Label Text=" - " />
                         <Label Text="{Binding Reps}" />
                         <Label Text="{Binding Sets}" />
                         <Label Text="{Binding Weight}" />

@@ -1,4 +1,5 @@
 using TrainingApp.Models;
+using TrainingApp.Data;
 
 namespace TrainingApp;
 
@@ -8,10 +9,15 @@ public partial class CreateTrainingSessionPage : ContentPage
     public CreateTrainingSessionPage(TrainingSession session)
 	{
 		InitializeComponent();
-        _session = session ?? new TrainingSession { Date = DateTime.Now };
+        _session = session ?? new TrainingSession { Date = DateTime.Now, Exercises = new List<TrainingSessionExercise>() };
         BindingContext = _session;
+        ExercisesList.ItemsSource = _session.Exercises;
+
         if (session != null)
-            LoadExercises();
+        {
+            SessionNameEntry.Text = session.Name;
+            DatePicker.Date = session.Date;
+        }
     }
 
     private async void LoadExercises()
@@ -21,38 +27,41 @@ public partial class CreateTrainingSessionPage : ContentPage
 
     private async void OnAddExercise(object sender, EventArgs e)
     {
-        bool validInput = false;
+        string exerciseName = await DisplayPromptAsync("Exercise Name", "Enter Exercise Name");
 
-        while (!validInput)
+        if (!string.IsNullOrEmpty(exerciseName))
         {
-            string name = await DisplayPromptAsync("Exercise", "Enter the name of the exercise");
-
-            if (string.IsNullOrEmpty(name)) // If user cancels or inputs empty name
+            string repsStr = await DisplayPromptAsync("Reps", "Enter Reps");
+            if (int.TryParse(repsStr, out int reps))
             {
-                return;
-            }
-
-            if (int.TryParse(await DisplayPromptAsync("Reps", "Enter reps:"), out int reps) &&
-                int.TryParse(await DisplayPromptAsync("Sets", "Enter sets:"), out int sets) &&
-                double.TryParse(await DisplayPromptAsync("Weight", "Enter weight:"), out double weight))
-            {
-                validInput = true;
-
-                var exercise = new TrainingSessionExercise
+                string setsStr = await DisplayPromptAsync("Sets", "Enter Sets");
+                if (int.TryParse(setsStr, out int sets))
                 {
-                    TrainingSessionId = _session.Id,
-                    ExerciseName = name,
-                    Reps = reps,
-                    Sets = sets,
-                    Weight = weight
-                };
-
-                await App.Database.SaveExerciseAsync(exercise);
-                LoadExercises();
+                    string weightStr = await DisplayPromptAsync("Weight", "Enter Weight");
+                    if (double.TryParse(weightStr, out double weight))
+                    {
+                        _session.Exercises.Add(new TrainingSessionExercise
+                        {
+                            ExerciseName = exerciseName,
+                            Reps = reps,
+                            Sets = sets,
+                            Weight = weight
+                        });
+                        ExercisesList.ItemsSource = _session.Exercises;
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "Invalid weight input.", "OK");
+                    }
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Invalid sets input.", "OK");
+                }
             }
             else
             {
-                await DisplayAlert("Error", "Invalid input for reps, sets, or weight. Please try again.", "OK");
+                await DisplayAlert("Error", "Invalid reps input.", "OK");
             }
         }
     }
@@ -60,7 +69,18 @@ public partial class CreateTrainingSessionPage : ContentPage
 
     private async void OnSaveSession(object sender, EventArgs e)
     {
-        await App.Database.SaveTrainingSessionAsync(_session);
+        _session.Name = SessionNameEntry.Text;
+        _session.Date = DatePicker.Date;
+
+        if (_session.Id == 0)
+        {
+            await App.Database.SaveTrainingSessionAsync(_session);
+        }
+        else
+        {
+            await App.Database.UpdateTrainingSessionAsync(_session);
+        }
+
         await Navigation.PopAsync();
     }
 }
