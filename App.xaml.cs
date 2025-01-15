@@ -2,6 +2,9 @@
 {
     public partial class App : Application
     {
+        const int WindowWidth = 500;
+        const int WindowHeight = 900;
+
         private static WorkoutDatabase _database;
 
         public static WorkoutDatabase Database
