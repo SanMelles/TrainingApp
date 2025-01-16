@@ -1,53 +1,59 @@
 ﻿using SQLite;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TrainingApp.Models;
 
-namespace TrainingApp.Data;
-
-public class WorkoutDatabase : SQLiteConnection
+namespace TrainingApp.Data
 {
-    private readonly SQLiteAsyncConnection _database;
-
-    public WorkoutDatabase(string dbPath) : base(dbPath)
+    public class WorkoutDatabase
     {
-        _database = new SQLiteAsyncConnection(dbPath);
-        InitializeDatabase().Wait();
+        private readonly SQLiteAsyncConnection _database;
+
+        public WorkoutDatabase(string dbPath)
+        {
+            _database = new SQLiteAsyncConnection(dbPath);
+            _database.CreateTableAsync<TrainingSession>().Wait();
+        }
+
+        public Task<List<TrainingSession>> GetTrainingSessionsAsync()
+        {
+            return _database.Table<TrainingSession>().ToListAsync();
+        }
+
+        public Task<int> AddTrainingSessionAsync(TrainingSession session)
+        {
+            return _database.InsertAsync(session);
+        }
+
+        public async Task<bool> SaveTrainingSessionAsync(TrainingSession session, List<TrainingSessionExercise> exercises)
+        {
+            try
+            {
+                await _database.InsertAsync(session);
+                foreach (var exercise in exercises)
+                {
+                    exercise.TrainingSessionId = session.Id;
+                    await _database.InsertAsync(exercise);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving training session: {ex.Message}");
+                return false;
+            }
+        }
+
+        public Task<List<TrainingSessionExercise>> GetExercisesForSessionAsync(int sessionId)
+        {
+            return _database.Table<TrainingSessionExercise>()
+                            .Where(e => e.TrainingSessionId == sessionId)
+                            .ToListAsync();
+        }
+
+        public Task<int> SaveExerciseAsync(TrainingSessionExercise exercise)
+        {
+            return _database.InsertAsync(exercise);
+        }
     }
-
-    private async Task InitializeDatabase()
-    {
-        await _database.CreateTableAsync<TrainingSession>();
-        await _database.CreateTableAsync<TrainingSessionExercise>();
-    }
-
-    public Task<List<TrainingSession>> GetTrainingSessionsAsync()
-        => _database.Table<TrainingSession>().ToListAsync();
-
-    public Task<List<TrainingSessionExercise>> GetExercisesAsync(int sessionId)
-        => _database.Table<TrainingSessionExercise>()
-                   .Where(e => e.TrainingSessionId == sessionId).ToListAsync();
-
-    public async Task<int> SaveTrainingSessionAsync(TrainingSession session)
-    {
-        int result = await _database.InsertOrReplaceAsync(session);
-
-        return result;
-    }
-
-    public async Task<int> DeleteTrainingSessionAsync(TrainingSession session)
-    {
-        await _database.ExecuteAsync("DELETE FROM TrainingSessionExercise WHERE TrainingSessionId = ?", session.Id);
-        return await _database.DeleteAsync(session);
-    }
-
-    public Task<int> SaveExerciseAsync(TrainingSessionExercise exercise)
-        => _database.InsertOrReplaceAsync(exercise);
-
-    public Task<int> UpdateExerciseAsync(TrainingSessionExercise exercise)
-        => _database.UpdateAsync(exercise);
-
-    public Task<int> DeleteExerciseAsync(TrainingSessionExercise exercise)
-        => _database.DeleteAsync(exercise);
-
-    public Task<int> UpdateTrainingSessionAsync(TrainingSession session)
-        => _database.UpdateAsync(session);
 }

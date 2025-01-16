@@ -3,26 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TrainingApp.CreateTrainingSessionPage"
              Title="Create Training Session">
-    <StackLayout Padding="20">
-        <Label Text="Session Name" />
-        <Entry x:Name="SessionNameEntry" Placeholder="Enter Session Name" />
-        <Label Text="Date" />
-        <DatePicker x:Name="DatePicker" />
-        <Label Text="Exercises" />
-        <CollectionView x:Name="ExercisesList" ItemsSource="{Binding Exercises}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{Binding ExerciseName}" />
-                        <Label Text=" - " />
-                        <Label Text="{Binding Reps}" />
-                        <Label Text="{Binding Sets}" />
-                        <Label Text="{Binding Weight}" />
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        <Button Text="Add Exercise" Clicked="OnAddExercise" />
-        <Button Text="Save Session" Clicked="OnSaveSession" />
+    <StackLayout Padding="10">
+        <Entry x:Name="SessionNameEntry" Placeholder="Session Name" />
+        <DatePicker x:Name="SessionDatePicker" />
+        <Button Text="Save" Clicked="OnSaveClicked" />
     </StackLayout>
 </ContentPage>

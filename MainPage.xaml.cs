@@ -1,58 +1,37 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using TrainingApp.Data;
 using TrainingApp.Models;
 
 namespace TrainingApp
 {
     public partial class MainPage : ContentPage
     {
+        private readonly WorkoutDatabase _database;
         public MainPage()
         {
             InitializeComponent();
-            LoadSessions();
+            _database = App.Database;
+            LoadTrainingSessions();
         }
 
-        private async void LoadSessions()
+        private async void LoadTrainingSessions()
         {
-            try
-            {
-                List<TrainingSession> allSessions = await App.Database.GetTrainingSessionsAsync();
+            var sessions = await _database.GetTrainingSessionsAsync();
+            TrainingSessionsListView.ItemsSource = sessions;
+        }
 
-                if (allSessions != null && allSessions.Any())
-                {
-                    List<TrainingSession> latestSessions = allSessions
-                        .OrderByDescending(s => s.Date)
-                        .Take(5)
-                        .ToList();
-
-                    SessionsList.ItemsSource = latestSessions;
-                }
-                else
-                {
-                    SessionsList.ItemsSource = new List<TrainingSession>();
-                }
-            }
-            catch (Exception ex)
+        private async void OnTrainingSessionTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item is TrainingSession session)
             {
-                await DisplayAlert("Error", $"Failed to load sessions: {ex.Message}", "OK");
+                await Navigation.PushAsync(new TrainingSessionDetailPage(_database, session));
             }
         }
 
-        private async void OnSessionSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void OnCreateNewSessionClicked(object sender, EventArgs e)
         {
-            if (e.SelectedItem is TrainingSession selectedSession)
-            {
-                await Navigation.PushAsync(new CreateTrainingSessionPage(selectedSession));
-
-                SessionsList.SelectedItem = null;
-            }
-        }
-
-        private async void OnCreateNewSession(object sender, EventArgs e)
-        {
-            TrainingSession newSession = new TrainingSession { Date = DateTime.Now };
-
-            await Navigation.PushAsync(new CreateTrainingSessionPage(newSession));
+            await Navigation.PushAsync(new CreateTrainingSessionPage());
         }
     }
+
 }
+

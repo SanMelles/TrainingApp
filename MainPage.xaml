@@ -5,30 +5,17 @@
              Title="Training Sessions">
 
     <ScrollView>
-        <StackLayout Padding="20">
-            <Label Text="Training Sessions" 
-                   FontSize="24"
-                   TextColor="{StaticResource Primary}"/>
-            <ListView x:Name="SessionsList"
-                        SelectionMode="Single"
-                        ItemSelected="OnSessionSelected">
+        <StackLayout Padding="10">
+            <Label Text="Training Sessions" FontSize="24" HorizontalOptions="Center" />
+            <ListView x:Name="TrainingSessionsListView"
+                  ItemTapped="OnTrainingSessionTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                            <Label Text="{Binding Name}" 
-                                   FontSize="18" 
-                                   TextColor="{StaticResource Secondary}"/>
-                            <Label Text="{Binding Date, StringFormat='{0:MM/dd/yyyy}'}" 
-                                   FontSize="14" 
-                                   TextColor="{StaticResource Dark}" />
-                        </StackLayout>
+                        <TextCell Text="{Binding Name}" Detail="{Binding Date}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Create New Session" 
-                    Clicked="OnCreateNewSession"
-                    BackgroundColor="{StaticResource Secondary}"
-                    TextColor="{StaticResource Dark}"/>
+            <Button Text="Create New Session" Clicked="OnCreateNewSessionClicked" />
         </StackLayout>
     </ScrollView>
 

@@ -8,8 +8,6 @@ namespace TrainingApp.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int TrainingSessionId { get; set; } // Foreign key
-        [ForeignKey(nameof(TrainingSession))]
-        public TrainingSession TrainingSession { get; set; }
         public string ExerciseName { get; set; }
         public int Reps { get; set; }
         public int Sets { get; set; }

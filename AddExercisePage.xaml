@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TrainingApp.AddExercisePage"
+             Title="Add Exercise">
+    <StackLayout Padding="10">
+        <Label Text="Exercise Name" />
+        <Entry x:Name="ExerciseNameEntry" Placeholder="Enter exercise name" />
+
+        <Label Text="Sets" />
+        <Entry x:Name="SetsEntry" Placeholder="Enter number of sets" Keyboard="Numeric" />
+
+        <Label Text="Reps" />
+        <Entry x:Name="RepsEntry" Placeholder="Enter number of reps" Keyboard="Numeric" />
+
+        <Label Text="Weight" />
+        <Entry x:Name="WeightEntry" Placeholder="Enter weight" Keyboard="Numeric" />
+
+        <Button Text="Save" Clicked="OnSaveClicked" />
+    </StackLayout>
+</ContentPage>
+    
