@@ -3,25 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TrainingApp.TrainingSessionDetailPage"
              Title="Session Details">
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="20">
 
-    <StackLayout Padding="10">
-        <Label x:Name="SessionNameLabel" Text="Session Name" />
-        <Label x:Name="SessionDateLabel" Text="Session Date" />
-        <ListView x:Name="ExercisesListView" ItemsSource="{Binding Exercises}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="10">
-                            <Label Text="{Binding ExerciseName}" FontAttributes="Bold" HorizontalOptions="StartAndExpand" />
-                            <Label Text="{Binding Sets}" HorizontalOptions="Center" />
-                            <Label Text="{Binding Reps}" HorizontalOptions="Center" />
-                            <Label Text="{Binding Weight}" HorizontalOptions="End" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <Label Text="{Binding Name}" 
+                       FontSize="24" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center" />
 
-        <Button Text="Add Exercise" Clicked="OnAddExerciseClicked" />
-    </StackLayout>
+            <Label Text="{Binding Date, StringFormat='Date: {0:MM/dd/yyyy}'}" 
+                       FontSize="18" 
+                       HorizontalOptions="Center" />
+
+            <ListView x:Name="ExercisesListView"
+                          ItemsSource="{Binding Exercises}"
+                          HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding ExerciseName}" 
+                                           FontAttributes="Bold" 
+                                           HorizontalOptions="StartAndExpand" />
+                                <Label Text="{Binding Sets}" 
+                                           HorizontalOptions="Center" />
+                                <Label Text="{Binding Reps}" 
+                                           HorizontalOptions="Center" />
+                                <Label Text="{Binding Weight}" 
+                                           HorizontalOptions="End" />
+                                <Button Text="Delete" 
+                                            Clicked="OnDeleteExerciseClicked"
+                                            CommandParameter="{Binding Id}"
+                                            HorizontalOptions="End" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Button Text="Add Exercise"
+                        Clicked="OnAddExerciseClicked"
+                        BackgroundColor="RoyalBlue"
+                        TextColor="White" />
+
+            <Button Text="Delete Session"
+                        Clicked="OnDeleteSessionClicked"
+                        BackgroundColor="Red"
+                        TextColor="White" />
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

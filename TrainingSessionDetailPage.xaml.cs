@@ -35,6 +35,29 @@ public partial class TrainingSessionDetailPage : ContentPage
 
     private async void OnAddExerciseClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AddExercisePage(_database, _session.Id));
+        if (sender is Button button && button.CommandParameter is int exerciseId)
+        {
+            var confirm = await DisplayAlert("Confirm", "Are you sure you want to delete this exercise?", "Yes", "No");
+            if (confirm)
+            {
+                await _database.DeleteExercisesBySessionIdAsync(exerciseId);
+                var exerciseToRemove = Exercises.FirstOrDefault(exercise => exercise.Id == exerciseId);
+                if (exerciseToRemove != null)
+                {
+                    Exercises.Remove(exerciseToRemove);
+                }
+            }
+        }
+    }
+
+    private async void OnDeleteSessionClicked(object sender, EventArgs e)
+    {
+        var confirm = await DisplayAlert("Confirm", "Are you sure you want to delete this session?", "Yes", "No");
+        if (confirm)
+        {
+            await _database.DeleteExercisesBySessionIdAsync(_session.Id);
+            await DisplayAlert("Deleted", "Training session deleted successfully", "OK");
+            await Navigation.PopAsync();
+        }
     }
 }

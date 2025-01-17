@@ -61,5 +61,23 @@ namespace TrainingApp.Data
                 await _database.InsertAsync(exercise);
             }
         }
+
+        public async Task DeleteExerciseByIdAsync(int exerciseId)
+        {
+            await _database.Table<TrainingSessionExercise>()
+                           .DeleteAsync(e => e.Id == exerciseId);
+        }
+
+        public async Task DeleteSessionByIdAsync(int sessionId)
+        {
+            // Delete all exercises associated with the session
+            await _database.Table<TrainingSessionExercise>()
+                           .DeleteAsync(e => e.TrainingSessionId == sessionId);
+
+            // Delete the session itself
+            await _database.Table<TrainingSession>()
+                           .DeleteAsync(s => s.Id == sessionId);
+        }
+
     }
 }
