@@ -4,19 +4,53 @@
              x:Class="TrainingApp.MainPage"
              Title="Training Sessions">
 
-    <ScrollView>
-        <StackLayout Padding="10">
-            <Label Text="Training Sessions" FontSize="24" HorizontalOptions="Center" />
+    <ScrollView Padding="20">
+        <StackLayout Spacing="20">
+
+            <Label Text="Training Sessions"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="DarkSlateGray" />
+
+
             <ListView x:Name="TrainingSessionsListView"
-                  ItemTapped="OnTrainingSessionTapped">
+                      ItemTapped="OnTrainingSessionTapped"
+                      HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Name}" Detail="{Binding Date}" />
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+
+                                <Image Source="session_icon.png"
+                                       WidthRequest="30"
+                                       HeightRequest="30"
+                                       VerticalOptions="Center" />
+
+                                <Label Text="{Binding Name}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="StartAndExpand" />
+
+                                <Label Text="{Binding Date, StringFormat='{0:MM/dd/yyyy}'}"
+                                       FontSize="16"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="End" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Create New Session" Clicked="OnCreateNewSessionClicked" />
+
+            <Button Text="Create New Session"
+                    BackgroundColor="RoyalBlue"
+                    TextColor="Black"
+                    Padding="10"
+                    CornerRadius="10"
+                    Clicked="OnCreateNewSessionClicked"
+                    HorizontalOptions="Center"
+                    WidthRequest="200" />
         </StackLayout>
     </ScrollView>
-
 </ContentPage>

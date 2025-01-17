@@ -4,6 +4,13 @@
              x:Class="TrainingApp.AddExercisePage"
              Title="Add Exercise">
     <StackLayout Padding="10">
+        
+        <Label Text="Session Name" />
+        <Entry x:Name="SessionNameEntry" Placeholder="Enter session name" />
+
+        <Label Text="SessionDate" />
+        <DatePicker x:Name="SessionDatePicker" />
+        
         <Label Text="Exercise Name" />
         <Entry x:Name="ExerciseNameEntry" Placeholder="Enter exercise name" />
 

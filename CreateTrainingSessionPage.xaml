@@ -3,9 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TrainingApp.CreateTrainingSessionPage"
              Title="Create Training Session">
-    <StackLayout Padding="10">
-        <Entry x:Name="SessionNameEntry" Placeholder="Session Name" />
-        <DatePicker x:Name="SessionDatePicker" />
-        <Button Text="Save" Clicked="OnSaveClicked" />
-    </StackLayout>
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+        
+            <Label Text="Session Name" />
+            <Entry x:Name="SessionNameEntry" Placeholder="Enter session name" />
+
+            <Label Text="SessionDate" />
+            <DatePicker x:Name="SessionDatePicker" />
+
+            <Label Text="Exercise Name" />
+            <Entry x:Name="ExerciseNameEntry" Placeholder="Enter exercise name" />
+
+            <Label Text="Sets" />
+            <Entry x:Name="SetsEntry" Placeholder="Enter number of sets" Keyboard="Numeric" />
+
+            <Label Text="Reps" />
+            <Entry x:Name="RepsEntry" Placeholder="Enter number of reps" Keyboard="Numeric" />
+
+            <Label Text="Weight" />
+            <Entry x:Name="WeightEntry" Placeholder="Enter weight" Keyboard="Numeric" />
+
+            <Button Text="Add Exercise" Clicked="OnAddExerciseClicked" />
+
+            <ListView x:Name="ExercisesListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+
+                                <Label Text="{Binding ExerciseName}" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="StartAndExpand" />
+
+                                <Label Text="{Binding Sets}" 
+                                       HorizontalOptions="Center" />
+
+                                <Label Text="{Binding Reps}" 
+                                       HorizontalOptions="Center" />
+
+                                <Label Text="{Binding Weight}" 
+                                       HorizontalOptions="End" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Save" Clicked="OnSaveClicked" />
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

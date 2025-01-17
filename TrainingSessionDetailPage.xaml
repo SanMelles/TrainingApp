@@ -7,7 +7,20 @@
     <StackLayout Padding="10">
         <Label x:Name="SessionNameLabel" Text="Session Name" />
         <Label x:Name="SessionDateLabel" Text="Session Date" />
-        <ListView x:Name="ExercisesListView" />
+        <ListView x:Name="ExercisesListView" ItemsSource="{Binding Exercises}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Label Text="{Binding ExerciseName}" FontAttributes="Bold" HorizontalOptions="StartAndExpand" />
+                            <Label Text="{Binding Sets}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Reps}" HorizontalOptions="Center" />
+                            <Label Text="{Binding Weight}" HorizontalOptions="End" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <Button Text="Add Exercise" Clicked="OnAddExerciseClicked" />
     </StackLayout>

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using TrainingApp.Data;
 using TrainingApp.Models;
 
@@ -5,28 +6,31 @@ namespace TrainingApp;
 
 public partial class TrainingSessionDetailPage : ContentPage
 {
-    private readonly TrainingSession _session;
     private readonly WorkoutDatabase _database;
+    private readonly TrainingSession _session;
+
+    public ObservableCollection<TrainingSessionExercise> Exercises { get; set; } = new ObservableCollection<TrainingSessionExercise>();
 
     public TrainingSessionDetailPage(WorkoutDatabase database, TrainingSession session)
     {
         InitializeComponent();
         _database = database;
         _session = session;
-        BindingContext = _session;
+        BindingContext = this;
+        LoadSessionDetails();
     }
 
     private async void LoadSessionDetails()
     {
+        Title = _session.Name;
         SessionNameLabel.Text = _session.Name;
-        SessionDateLabel.Text = _session.Date.ToString("d MMM yyyy");
+        SessionDateLabel.Text = _session.Date.ToShortDateString();
 
-        var exercises = await App.Database.GetExercisesForSessionAsync(_session.Id);
-        ExercisesListView.ItemsSource = exercises.Select(e => new
+        var exercises = await _database.GetExercisesForSessionAsync(_session.Id);
+        foreach (var exercise in exercises)
         {
-            ExerciseName = e.ExerciseName,
-            Detail = $"{e.Sets} sets of {e.Reps} reps @ {e.Weight} kg"
-        });
+            Exercises.Add(exercise);
+        }
     }
 
     private async void OnAddExerciseClicked(object sender, EventArgs e)

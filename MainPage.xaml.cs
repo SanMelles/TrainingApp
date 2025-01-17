@@ -13,10 +13,19 @@ namespace TrainingApp
             LoadTrainingSessions();
         }
 
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            LoadTrainingSessions();
+        }
+
         private async void LoadTrainingSessions()
         {
             var sessions = await _database.GetTrainingSessionsAsync();
-            TrainingSessionsListView.ItemsSource = sessions;
+
+            var sortedSessions = sessions.OrderByDescending(session => session.Date).ToList();
+
+            TrainingSessionsListView.ItemsSource = sortedSessions;
         }
 
         private async void OnTrainingSessionTapped(object sender, ItemTappedEventArgs e)
