@@ -59,14 +59,30 @@ namespace TrainingApp
         {
             try
             {
-                string exerciseName = ExerciseNameEntry.Text;
-                if (string.IsNullOrWhiteSpace(exerciseName)) throw new Exception("Exercise name cannot be empty.");
+                // Validate exercise name
+                string exerciseName = ExerciseNameEntry.Text?.Trim();
+                if (string.IsNullOrWhiteSpace(exerciseName))
+                {
+                    throw new Exception("Exercise name cannot be empty.");
+                }
 
-                int sets = int.Parse(SetsEntry.Text);
-                int reps = int.Parse(RepsEntry.Text);
-                double weight = double.Parse(WeightEntry.Text);
+                // Validate numeric inputs
+                if (!int.TryParse(SetsEntry.Text, out int sets) || sets <= 0)
+                {
+                    throw new Exception("Sets must be a positive number.");
+                }
 
-                // Create a new exercise object and add it to the list
+                if (!int.TryParse(RepsEntry.Text, out int reps) || reps <= 0)
+                {
+                    throw new Exception("Reps must be a positive number.");
+                }
+
+                if (!double.TryParse(WeightEntry.Text, out double weight) || weight < 0)
+                {
+                    throw new Exception("Weight must be a non-negative number.");
+                }
+
+                // Add exercise to the list
                 var exercise = new TrainingSessionExercise
                 {
                     ExerciseName = exerciseName,
@@ -75,10 +91,9 @@ namespace TrainingApp
                     Weight = weight
                 };
 
-                // Add the exercise to the ObservableCollection (automatically updates UI)
                 _exercises.Add(exercise);
 
-                // Clear input fields for next entry
+                // Clear input fields
                 ExerciseNameEntry.Text = string.Empty;
                 SetsEntry.Text = string.Empty;
                 RepsEntry.Text = string.Empty;
@@ -86,8 +101,7 @@ namespace TrainingApp
             }
             catch (Exception ex)
             {
-                // Display error message for invalid input
-                DisplayAlert("Error", $"Invalid input: {ex.Message}", "OK");
+                DisplayAlert("Error", ex.Message, "OK");
             }
         }
 

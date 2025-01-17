@@ -23,7 +23,7 @@ namespace TrainingApp
         {
             var sessions = await _database.GetTrainingSessionsAsync();
 
-            var sortedSessions = sessions.OrderByDescending(session => session.Date).ToList();
+            var sortedSessions = sessions.OrderByDescending(session => session.Date).Take(10).ToList();
 
             TrainingSessionsListView.ItemsSource = sortedSessions;
         }
@@ -39,6 +39,11 @@ namespace TrainingApp
         private async void OnCreateNewSessionClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new CreateTrainingSessionPage());
+        }
+
+        private async void OnViewAllSessionsClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AllSessionsPage(_database));
         }
     }
 

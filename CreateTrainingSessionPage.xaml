@@ -30,19 +30,15 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
-
+                            <StackLayout Padding="10" Orientation="Horizontal" Spacing="10">
                                 <Label Text="{Binding ExerciseName}" 
                                        FontAttributes="Bold" 
                                        HorizontalOptions="StartAndExpand" />
-
-                                <Label Text="{Binding Sets}" 
+                                <Label Text="{Binding Sets, StringFormat='Sets: {0}'}" 
                                        HorizontalOptions="Center" />
-
-                                <Label Text="{Binding Reps}" 
+                                <Label Text="{Binding Reps, StringFormat='Reps: {0}'}" 
                                        HorizontalOptions="Center" />
-
-                                <Label Text="{Binding Weight}" 
+                                <Label Text="{Binding Weight, StringFormat='Weight: {0} lbs'}" 
                                        HorizontalOptions="End" />
                             </StackLayout>
                         </ViewCell>

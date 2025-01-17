@@ -7,13 +7,34 @@
     <ScrollView Padding="20">
         <StackLayout Spacing="20">
 
-            <Label Text="Training Sessions"
+            <!-- Button to navigate to All Sessions Page -->
+            <Button Text="View All Sessions"
+                    BackgroundColor="RoyalBlue"
+                    TextColor="White"
+                    Padding="10"
+                    CornerRadius="10"
+                    Clicked="OnViewAllSessionsClicked"
+                    HorizontalOptions="Center"
+                    WidthRequest="200" />
+
+            <!-- Button to create a new session -->
+            <Button Text="Create New Session"
+                    BackgroundColor="LimeGreen"
+                    TextColor="White"
+                    Padding="10"
+                    CornerRadius="10"
+                    Clicked="OnCreateNewSessionClicked"
+                    HorizontalOptions="Center"
+                    WidthRequest="200" />
+            
+            <!-- Title -->
+            <Label Text="Latest Training Sessions"
                    FontSize="32"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="DarkSlateGray" />
 
-
+            <!-- ListView to display only the last 5 sessions -->
             <ListView x:Name="TrainingSessionsListView"
                       ItemTapped="OnTrainingSessionTapped"
                       HasUnevenRows="True">
@@ -21,7 +42,6 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-
                                 <Image Source="session_icon.png"
                                        WidthRequest="30"
                                        HeightRequest="30"
@@ -43,14 +63,6 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button Text="Create New Session"
-                    BackgroundColor="RoyalBlue"
-                    TextColor="Black"
-                    Padding="10"
-                    CornerRadius="10"
-                    Clicked="OnCreateNewSessionClicked"
-                    HorizontalOptions="Center"
-                    WidthRequest="200" />
         </StackLayout>
     </ScrollView>
 </ContentPage>

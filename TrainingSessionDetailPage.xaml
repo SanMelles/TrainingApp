@@ -4,52 +4,100 @@
              x:Class="TrainingApp.TrainingSessionDetailPage"
              Title="Session Details">
     <ContentPage.Content>
-        <StackLayout Padding="10" Spacing="20">
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="20">
 
-            <Label Text="{Binding Name}" 
-                       FontSize="24" 
+                <!-- Session Title -->
+                <Label x:Name="SessionNameLabel" 
+                       FontSize="28" 
                        FontAttributes="Bold" 
-                       HorizontalOptions="Center" />
+                       HorizontalOptions="Center" 
+                       TextColor="RoyalBlue" />
 
-            <Label Text="{Binding Date, StringFormat='Date: {0:MM/dd/yyyy}'}" 
+                <!-- Session Date -->
+                <Label x:Name="SessionDateLabel" 
                        FontSize="18" 
-                       HorizontalOptions="Center" />
+                       HorizontalOptions="Center" 
+                       TextColor="Gray" />
 
-            <ListView x:Name="ExercisesListView"
+                <!-- Exercises Section -->
+                <Label Text="Exercises"
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Start" 
+                       TextColor="White" />
+
+                <ListView x:Name="ExercisesListView"
                           ItemsSource="{Binding Exercises}"
-                          HasUnevenRows="True">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding ExerciseName}" 
+                          HasUnevenRows="True"
+                          SeparatorColor="LightGray">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal" Padding="10" Spacing="10">
+                                    <Label Text="{Binding ExerciseName}" 
                                            FontAttributes="Bold" 
                                            HorizontalOptions="StartAndExpand" />
-                                <Label Text="{Binding Sets}" 
-                                           HorizontalOptions="Center" />
-                                <Label Text="{Binding Reps}" 
-                                           HorizontalOptions="Center" />
-                                <Label Text="{Binding Weight}" 
-                                           HorizontalOptions="End" />
-                                <Button Text="Delete" 
+
+                                    <!-- Labels for Sets, Reps, and Weight -->
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+                                        <Label Text="Sets" 
+                                               FontSize="12" 
+                                               TextColor="Gray" />
+                                        <Label Text="{Binding Sets}" 
+                                               FontAttributes="Bold" 
+                                               HorizontalOptions="Center" />
+                                    </StackLayout>
+
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+                                        <Label Text="Reps" 
+                                               FontSize="12" 
+                                               TextColor="Gray" />
+                                        <Label Text="{Binding Reps}" 
+                                               FontAttributes="Bold" 
+                                               HorizontalOptions="Center" />
+                                    </StackLayout>
+
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="End">
+                                        <Label Text="Weight" 
+                                               FontSize="12" 
+                                               TextColor="Gray" />
+                                        <Label Text="{Binding Weight}" 
+                                               FontAttributes="Bold" 
+                                               HorizontalOptions="Center" />
+                                    </StackLayout>
+
+                                    <!-- Delete Button -->
+                                    <Button Text="Delete" 
                                             Clicked="OnDeleteExerciseClicked"
                                             CommandParameter="{Binding Id}"
-                                            HorizontalOptions="End" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                            BackgroundColor="Red"
+                                            TextColor="White"
+                                            HorizontalOptions="End"
+                                            Padding="5" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-            <Button Text="Add Exercise"
-                        Clicked="OnAddExerciseClicked"
-                        BackgroundColor="RoyalBlue"
-                        TextColor="White" />
+                <!-- Buttons for adding and deleting -->
+                <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Center">
+                    <Button Text="Add Exercise"
+                            Clicked="OnAddExerciseClicked"
+                            BackgroundColor="RoyalBlue"
+                            TextColor="White"
+                            Padding="10, 5"
+                            HorizontalOptions="Center" />
 
-            <Button Text="Delete Session"
-                        Clicked="OnDeleteSessionClicked"
-                        BackgroundColor="Red"
-                        TextColor="White" />
-        </StackLayout>
+                    <Button Text="Delete Session"
+                            Clicked="OnDeleteSessionClicked"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            Padding="10, 5"
+                            HorizontalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

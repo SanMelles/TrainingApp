@@ -21,34 +21,17 @@ public partial class AddExercisePage : ContentPage
     {
         try
         {
-            // Save the session details first
-            var newSession = new TrainingSession
+            var newExercise = new TrainingSessionExercise
             {
-                Name = SessionNameEntry.Text,
-                Date = SessionDatePicker.Date
+                TrainingSessionId = _sessionId, // Ensure this links to the correct session
+                ExerciseName = ExerciseNameEntry.Text,
+                Sets = int.Parse(SetsEntry.Text),
+                Reps = int.Parse(RepsEntry.Text),
+                Weight = double.Parse(WeightEntry.Text)
             };
 
-            // Save the session to the database and get its ID
-            var savedSession = await _database.SaveTrainingSessionAsync(newSession);
-
-            // Now associate the exercises with the saved session
-            var exercises = new List<TrainingSessionExercise>
-            {
-                new TrainingSessionExercise
-                {
-                    ExerciseName = ExerciseNameEntry.Text,
-                    Sets = int.Parse(SetsEntry.Text),
-                    Reps = int.Parse(RepsEntry.Text),
-                    Weight = double.Parse(WeightEntry.Text),
-                    TrainingSessionId = savedSession.Id // Set the session ID for the exercise
-                }
-            };
-
-            // Save the exercises to the database
-            await _database.SaveExercisesAsync(exercises);
-
-            // Navigate to the session details page
-            await Navigation.PushAsync(new TrainingSessionDetailPage(_database, savedSession));
+            await _database.SaveExerciseAsync(newExercise);
+            await Navigation.PopAsync(); // Navigate back to the previous page
         }
         catch (Exception ex)
         {
